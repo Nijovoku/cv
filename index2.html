@@ -1,0 +1,108 @@
+<html>
+  <head>
+    
+    <title>Naslov</title>
+    <style>
+        @import url('http://fonts.cdnfonts.com/css/games');
+        body{
+            background-color: F8EDE3;
+        }
+        h1{
+            font-family: 'Games', sans-serif;
+            font-weight: 500;
+        }
+        div
+        {
+            float: left;
+            width:105px;
+            height:150px;
+            background-color: EEF1FF;
+            text-align: center;
+            color: EEF1FF;
+            font-family: Segoe UI;
+            border: 3px solid;
+            border-color: AAC4FF;
+            line-height: 150px;
+            cursor: pointer;
+            user-select: none;
+            margin-left: 8px;
+            margin-bottom: 10px;
+        }
+        .active {
+            border-color: C6EBC5;
+            background-color: FBF2CF;
+            color: FA7070;
+            font-weight: bold;
+        }
+    </style>
+  </head>
+  <body>
+    <center>
+        <h1>Memory Game</h1>
+        <hr>
+    </center>
+  </body>
+
+  <script>
+    let allCards = [];
+    const ListOfNumberToPlay = [];
+    const ItterationList = [];
+    let usedNums = [];
+    let activeCards = [];
+    
+
+    function addDiv(num) {
+        const div = document.createElement('div');
+        div.innerHTML = num;
+        document.body.appendChild(div);
+        allCards.push(div);
+    };
+    
+    function addRandom(x,y,z) {
+        while (x.length < y) {
+            let num = Math.floor(Math.random() * z);
+            usedNums.includes(num)?num:x.push(num);
+            usedNums.push(num);
+        };
+    };
+
+    function manipulateDivs(d){
+        d.forEach(x => {
+            x.addEventListener('click', () => {
+                if (activeCards.length === 2) {
+                    if (activeCards[0].innerHTML === activeCards[1].innerHTML){
+                    //version 1
+                        document.body.removeChild(activeCards[0]);
+                        document.body.removeChild(activeCards[1]);
+                    //version 2
+                        //activeCards = [];
+                    }
+                    activeCards.forEach(x => {  
+                        x.classList.remove('active')})
+                    activeCards = [];
+                };
+                if (x != activeCards[0]) {
+                    x.classList.add('active');
+                    activeCards.push(x);
+                }
+                
+            });
+        });     
+    };
+
+    
+    addRandom(ListOfNumberToPlay, 10, 20);
+    ListOfNumberToPlay.forEach(x => ListOfNumberToPlay.push(x));
+    usedNums = [];
+
+    addRandom(ItterationList, 20, 20);
+    
+    //number of divs
+    for (x=0; x<20; x++){
+        addDiv(ListOfNumberToPlay[ItterationList[x]]);
+    };
+
+    manipulateDivs(allCards);
+
+</script>
+</html>
