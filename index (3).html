@@ -1,0 +1,101 @@
+<html>
+  <head>
+    
+    <title>Naslov</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@1,700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="playground">
+        <p id="demo"></p>
+    </div>
+  </body>
+
+  <script>
+    let allCards = [];
+    const ListOfNumberToPlay = [];
+    const ItterationList = [];
+    let usedNums = [];
+    let activeCards = [];
+    let isEnd = 0;
+    let timer = 60;
+    
+    const dict = {
+    // range of numbers, number of pairs, time
+    'HARD': [20, 10, 40],
+    'EASY': [10, 5, 30],
+    };
+    function myTimer() {
+        timer -= 1
+        document.getElementById("demo").innerHTML = timer.toLocaleTimeString();
+    }
+    function addDiv(num) {
+        const div = document.createElement('div');
+        div.innerHTML = num;
+        div.classList.add('cards')
+        document.getElementById('playground').appendChild(div);
+        allCards.push(div);
+    };
+    function addRandom(x,y,z) {
+        while (x.length < y) {
+            let num = Math.floor(Math.random() * z);
+            usedNums.includes(num)?num:x.push(num);
+            usedNums.push(num);
+        };
+    };
+    function manipulateDivs(d){
+        d.forEach(x => {
+            x.addEventListener('click', () => {
+                if (activeCards.length === 2) {
+                    if (activeCards[0].innerHTML === activeCards[1].innerHTML){
+                    //version 1
+                        //document.getElementById('playground').removeChild(activeCards[0]);
+                        //document.getElementById('playground').removeChild(activeCards[1]);
+                    //version 2
+                        //activeCards = [];
+                    // version 3
+                        activeCards[0].classList.add('hidden');
+                        activeCards[1].classList.add('hidden')
+                        isEnd += 2;
+                    }
+                    activeCards.forEach(x => {  
+                        x.classList.remove('active')})
+                    activeCards = [];
+                };
+                if (x != activeCards[0]) {
+                    x.classList.add('active');
+                    activeCards.push(x);
+                }
+                
+            });
+        });     
+    };
+    function chooseLevel() {
+        const user = prompt('Choose level. Easy or Hard ').toUpperCase();
+        addRandom(ListOfNumberToPlay, dict[user][1], dict[user][0]);
+        ListOfNumberToPlay.forEach(x => ListOfNumberToPlay.push(x));
+        usedNums = [];
+        addRandom(ItterationList, dict[user][1] * 2, dict[user][1] * 2);
+        for (x=0; x<(dict[user][1] * 2); x++){
+            addDiv(ListOfNumberToPlay[ItterationList[x]]);
+        };
+        let countDownTime = dict[user][2];
+        setInterval(function() {
+        countDownTime -= 1;
+        document.getElementById("demo").innerHTML = countDownTime + "s ";
+        if (countDownTime < 0) {
+            document.getElementById('playground').innerHTML = "Time's Up. You Lost!"
+        }
+    }, 1000);
+
+    };
+    function play() {
+        chooseLevel();
+        manipulateDivs(allCards);
+    };
+    play();
+
+</script>
+</html>
